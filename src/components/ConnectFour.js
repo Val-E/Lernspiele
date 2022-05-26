@@ -30,6 +30,7 @@ export const ConnectFour = (props) => {
   const makeMove = () => {
     if (userAnswer.slice() === answer) {
       setFeedback('correct');
+      throwBall();
     } else {
       setFeedback('wrong');
     }
@@ -97,8 +98,9 @@ export const ConnectFour = (props) => {
       if (localTable[i][column] === 'w') {
         localTable[i][column] = playerChar;
         setTable(localTable);
-        checkWin(i, column, playerChar);
-        break;
+
+        const func = setTimeout(() => { checkWin(i, column, playerChar); }, feedbackTime);
+        return () => clearTimeout(func);
       }
     }
   };
@@ -146,7 +148,6 @@ export const ConnectFour = (props) => {
   useEffect(() => {
     if (feedback) {
       const func = setTimeout(() => {
-        throwBall();
         setFeedback('');
         setAnswer('');
         setUserAnswer('');

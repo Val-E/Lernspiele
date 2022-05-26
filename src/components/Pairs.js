@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 
 import { Container, Alert, Table, Button } from 'react-bootstrap';
 
+import './Table.css';
+
 
 export const Pairs = (props) => {
   const [questionTable, setQuestionTable] = useState([]),
@@ -24,27 +26,26 @@ export const Pairs = (props) => {
         [renderResults, setRenderResults] = useState(false),
         [buttonList] = useState([]),
 
-        game = props.game,
         feedbackTime = props.feedbackTime;
 
 
   useEffect(() => {
-    var arr = [];
-    for (let key of Object.keys(game)) {
-      arr.push(...Array(game[Object.keys(game)[0]].length)
-        .fill()
-        .map((_, i) => { return {'key': key, 'id': i} })
-      );
-    }
+	  var arr = [];
+      for (let key of Object.keys(props.game)) {
+        arr.push(...Array(props.game[Object.keys(props.game)[0]].length)
+          .fill()
+          .map((_, i) => { return {'key': key, 'id': i} })
+        );
+      }
 
-    arr = arr.sort(() => Math.random() - 0.5);
-    setIdx1(arr);
+      arr = arr.sort(() => Math.random() - 0.5);
+      setIdx1(arr);
 
-    arr = [...arr].sort(() => Math.random() - 0.5);
-    setIdx2(arr);
+      arr = [...arr].sort(() => Math.random() - 0.5);
+      setIdx2(arr);
 
-    setRowSize(Math.round(Math.sqrt(arr.length + 1)));
-  }, [game]);
+      setRowSize(Math.round(Math.sqrt(arr.length + 1)));
+  }, [props.game]);
 
 
   useEffect(() => {
@@ -120,7 +121,7 @@ export const Pairs = (props) => {
 
         setFeedback('correct');
 
-        if (buttonList.length > 2 * (Object.keys(game).length * (game[Object.keys(game)[0]].length - 1))) {
+        if (buttonList.length > 2 * (Object.keys(props.game).length * (props.game[Object.keys(props.game)[0]].length - 1))) {
           setRenderResults(true);
         }
 
@@ -139,32 +140,34 @@ export const Pairs = (props) => {
 
 
     var table = [],
-        row = [];
+	    row = [],
+		i = 0;
 
-    for (let tuple in idx1) {
+	for (let tuple of idx1) {
+	  i++;
       row.push(
         <td className="bg-primary">
           <center>
             <Button
               className={`
-                ${buttonList.indexOf(`answer-${ idx1[tuple].key }-${ idx1[tuple].id }`) !== -1 ? ' visually-hidden ': ''}
+                ${buttonList.indexOf(`answer-${ tuple.key }-${ tuple.id }`) !== -1 ? ' visually-hidden ': ''}
                 ${question === '' ? ' disabled ': ''}
                 ${correctAnswer !== '' ? ' disabled ': ''}
               `}
               variant="warning"
               size="lg"
               onClick={() => {
-                setAnswerID(`answer-${ idx1[tuple].key }-${ idx1[tuple].id }`);
-                updateScore( game[ idx1[tuple].key ][ idx1[tuple].id ].answer);
+                setAnswerID(`answer-${ tuple.key }-${ tuple.id }`);
+                updateScore(props.game[ tuple.key ][ tuple.id ].answer);
               }}
             >
-              Antwort { parseInt(tuple) + 1 }
+              Antwort { i }
             </Button>
           </center>
         </td>
       );
 
-      if ((parseInt(tuple) + 1) % rowSize === 0) {
+      if (i % rowSize === 0) {
         table.push(<tr>{row}</tr>);
         row = [];
       }
@@ -179,31 +182,33 @@ export const Pairs = (props) => {
 
     table = [];
     row = [];
+	i = 0;
 
-    for (let tuple in idx2) {
+	for (let tuple of idx2) {
+	  i++;
       row.push(
         <td className="bg-primary">
           <center>
             <Button
               className={`
-                ${buttonList.indexOf(`question-${ idx2[tuple].key }-${ idx2[tuple].id }`) !== -1 ? ' visually-hidden ': ''}
+                ${buttonList.indexOf(`question-${ tuple.key }-${ tuple.id }`) !== -1 ? ' visually-hidden ': ''}
                 ${question !== '' ? ' disabled ': ''}
               `}
               variant="danger"
               size="lg"
               onClick={() => {
-                setQuestionID(`question-${ idx2[tuple].key }-${ idx2[tuple].id }`);
-                setAnswer( game[ idx2[tuple].key ][ idx2[tuple].id ].answer);
-                setQuestion(game[ idx2[tuple].key ][ idx2[tuple].id ].question);
+                setQuestionID(`question-${ tuple.key }-${ tuple.id }`);
+                setAnswer(props.game[ tuple.key ][ tuple.id ].answer);
+                setQuestion(props.game[ tuple.key ][ tuple.id ].question);
               }}
             >
-              Frage { parseInt(tuple) + 1 }
+              Frage { i + 1 }
             </Button>
           </center>
         </td>
       );
 
-      if ((parseInt(tuple) + 1) % rowSize === 0) {
+      if (i % rowSize === 0) {
         table.push(<tr>{row}</tr>);
         row = [];
       }
@@ -214,16 +219,17 @@ export const Pairs = (props) => {
     }
 
     setQuestionTable(table);
+
   }, [
     question, answer, correctAnswer, buttonList,
-    rowSize, idx1, idx2, game, playerID, score
+    rowSize, idx1, idx2, props.game, playerID, score
   ]);
 
 
   return (
     <Container>
       { question !== '' ? (
-        <Alert className="table-container" variant="danger" style={{maxWidth: 700}}>
+        <Alert variant="danger" style={{"maxWidth": "650px", "overflow": "scroll"}}>
           <center>
             <h4 className="h4">Frage:</h4>
             <h5 className="h5">{ question }</h5>
@@ -232,7 +238,7 @@ export const Pairs = (props) => {
       ): null }
 
       { correctAnswer !== '' ? (
-        <Alert className="table-container" variant="warning" style={{maxWidth: 700}}>
+        <Alert variant="warning" style={{"maxWidth": "650px", "overflow": "scroll"}}>
           <center>
             <h4 className="h4">Antwort:</h4>
             <h5 className="h5">{correctAnswer}</h5>
@@ -263,6 +269,7 @@ export const Pairs = (props) => {
              border-3 hover`
           }
         >
+		  <thead></thead>
           <tbody>
             <tr>
               <th colSpan={rowSize} className="bg-danger">

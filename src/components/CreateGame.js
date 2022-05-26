@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { Alert, Form, InputGroup, FormControl, Button, Table } from 'react-bootstrap';
+import { Alert, Form, InputGroup, FormControl, Button, Table, Container, Modal } from 'react-bootstrap';
 
 import './Table.css';
 
@@ -9,7 +9,9 @@ export const CreateGame = (props) => {
   const [questionNumber,  setQuestionNumber] = useState(0),
         [categoryNumber,  setCategoryNumber] = useState(0),
         [gameData, setGameData] = useState(null),
-        [table, setTable] = useState([]);
+        [table, setTable] = useState([]),
+
+        [showExplanation, setShowExplanation] = useState(false);
 
 
   useEffect(() => {
@@ -94,6 +96,40 @@ export const CreateGame = (props) => {
       </Alert.Heading>
 
       <hr />
+      <Button
+        className="btn-lg"
+        variant="secondary"
+        onClick={ e => setShowExplanation(true) }
+      >
+        Wie erstelle ich ein Set?
+      </Button>
+      <hr />
+
+      <Modal  show={showExplanation} onHide={e => setShowExplanation(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Wie erstelle ich ein Set?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Um ein Set für ein Spiel zu erstellen, müssen Sie die Anzahl an Kategorien und
+            danach die Anzahl an Fragen je Kategorie angeben.
+            Die Bezeichnungen der einzelnen Kategorien müssen sich dabei unterscheiden.
+          </p>
+          <p>
+            Ist das erledigt, erscheint eine Tabelle, wo Sie Fragen und dazugehörige Antworten eintragen können.
+            Sobald Sie alle Felder ausgefüllt haben, können Sie auf „Code Kopieren!“ klicken,
+            um sich den Code für das Set anzeigen zu lassen.
+          </p>
+          <p>
+            Der generierte Code kann für alle drei Spiele verwendet werden.
+          </p>
+       </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={e => setShowExplanation(false)}>
+            Schlie&szlig;en!
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <InputGroup className="mb-3 float">
         <InputGroup.Text className="bg-success text-light">
@@ -108,7 +144,7 @@ export const CreateGame = (props) => {
 
       <InputGroup className="mb-3 float">
         <InputGroup.Text className="bg-success text-light">
-          Anzahl an Fragen
+          Anzahl an Fragen je Kategorie
         </InputGroup.Text>
         <FormControl
           onChange={e => setQuestionNumber(e.target.value)}
@@ -117,9 +153,10 @@ export const CreateGame = (props) => {
         />
       </InputGroup>
 
-      <div className="table-container">
+      <Container className="table-container">
         { table }
-      </div>
+      </Container>
+
       <br />
 
       { gameData ? (

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 
 import { Container, Alert, Table, Button, InputGroup, FormControl } from 'react-bootstrap';
 
+import './Table.css';
+
 
 export const Quiz = (props) => {
   const [tableBody, setTableBody] = useState([]),
@@ -19,8 +21,6 @@ export const Quiz = (props) => {
 
         game = props.game,
         feedbackTime = props.feedbackTime;
-
-  console.log(feedbackTime);
 
 
   const updateScore = () => {
@@ -166,7 +166,7 @@ export const Quiz = (props) => {
       ): null }
 
       { Object.keys(game).length > 0 ? (
-        <div className="table-container">
+        <Container className="table-container">
           <Table
             className={
               `table-responsive-sm table-sm
@@ -179,7 +179,7 @@ export const Quiz = (props) => {
               <tr>
                 { Object.keys(game).map((category) => {
                   return (
-                    <th scope="col" className="bg-danger" minWidt='200px'>
+                    <th scope="col" className="bg-danger" minWidth='200px'>
                       <center>
                         {category}
                       </center>
@@ -192,7 +192,7 @@ export const Quiz = (props) => {
               { tableBody }
             </tbody>
           </Table>
-        </div>
+        </Container>
       ): null }
 
       <br />

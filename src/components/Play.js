@@ -62,56 +62,54 @@ export const Play = () => {
               <Form.Label>Zeit zum Lesen der R&uuml;ckmeldung in Sekunden</Form.Label>
             </Form.Group>
 
-            <div className="mb-3">
-              <Form.Check
-                className="on"
-                inline
-                type="radio"
-                label="Quiz"
-                id="quiz"
-                name="selectGame"
-                onClick={e => setGame("quiz")}
-              />
-              <Form.Check
-                inline
-                type="radio"
-                label="Pairs"
-                id="pairs"
-                name="selectGame"
-                onClick={e => setGame("pairs")}
-              />
-              <Form.Check
-                inline
-                type="radio"
-                label="Vier Gewinnt"
-                id="four_in_a_row"
-                name="selectGame"
-                onClick={e => setGame("four_in_a_row")}
-              />
-            </div>
+            <Form.Check
+              inline
+              className="on"
+              type="radio"
+              label="Quiz"
+              id="quiz"
+              name="selectGame"
+              onClick={e => setGame("quiz")}
+            />
+            <Form.Check
+              inline
+              type="radio"
+              label="Pairs"
+              id="pairs"
+              name="selectGame"
+              onClick={e => setGame("pairs")}
+            />
+            <Form.Check
+              inline
+              type="radio"
+              label="Vier Gewinnt"
+              id="four_in_a_row"
+              name="selectGame"
+              onClick={e => setGame("four_in_a_row")}
+            />
           </Form>
         </>
-      ): null}
+      ): (
 
-      <center>
-        <div>
-          { game === "quiz" ? (
-            <Quiz game={gameCode} playerNumber={playerNumber} feedbackTime={feedbackTime} />
-          ): (
-            <>
-              { game === "pairs" ? (
-                <Pairs game={gameCode} playerNumber={playerNumber} feedbackTime={feedbackTime} />
-              ): (
-                <>
-                  { game=== "four_in_a_row" ? (
-                    <ConnectFour game={gameCode} feedbackTime={feedbackTime} />
-                  ): null }
-                </>
-              )}
-            </>
-          )}
-        </div>
-      </center>
+      <>
+        { game === "quiz" ? (
+          <Quiz game={gameCode} playerNumber={playerNumber} feedbackTime={feedbackTime} />
+        ): (
+          <>
+            { game === "pairs" ? (
+              <Pairs game={gameCode} playerNumber={playerNumber} feedbackTime={feedbackTime} />
+            ): (
+              <>
+                { game=== "four_in_a_row" ? (
+                  <ConnectFour game={gameCode} feedbackTime={feedbackTime} />
+                ): null }
+              </>
+            )}
+          </>
+        )}
+      </>
+    )}
+
     </Alert>
   );
 }
